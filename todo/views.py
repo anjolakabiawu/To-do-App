@@ -3,10 +3,11 @@ from django.contrib.auth.models import User
 from todo import models
 from todo.models import TODOO
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 
 
 def signup(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         fnm = request.POST.get('fnm')
         emailid = request.POST.get('email')
         pwd = request.POST.get('pwd')
@@ -16,15 +17,29 @@ def signup(request):
         return redirect('/login')        
     return render(request, 'sign.html')
 
-def login(request):
-    if request.method=='POST':
+def loginn(request):
+    if request.method == 'POST':
         fnm =request.POST.get('fnm')
         pwd = request.POST.get('pwd')
         print(fnm, pwd)
-        user = authenticate(request, username=fnm, password=pwd)
-        if user is not None:
-            login(request, user)
+        userr = authenticate(request, username=fnm, password=pwd)
+        if userr is not None:
+            login(request,userr)
             return redirect('/todopage')
         else:
             return redirect('/login')
     return render(request, "login.html")
+
+def todo(request):
+    if request.method=='POST':
+        title = request.POST.get('title')
+        print(title)
+        obj = models.TODOO(title=title, user=request.user)
+        obj.save()
+        res= models.TODOO.objects.filter(user=request.user).order_by('-date')
+        return redirect('/todopage', {'res':res})
+    res= models.TODOO.objects.filter(user=request.user).order_by('-date')
+    return render(request, 'todo.html', {'res':res})
+
+def edit_todo(request):
+    pass
