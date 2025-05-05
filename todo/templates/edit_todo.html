@@ -27,7 +27,8 @@
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <form method="post">
                     {% csrf_token %}
-                    <input type="text" class="inp" name="title" required placeholder="Add Today's Task">
+                    <input type="text" required class="todo-input inp" name="title" placeholder="What is the Task today?" 
+                    value={{ obj.title }}>
                     <input type="submit" class="submit-button" value="Update Task">
                 </form>
                 {% for todo in  res %}
@@ -36,7 +37,7 @@
                     <p>{{ todo.title }}</p>
                     <div>
                         <a href=""><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href=""><i class="fa-solid fa-trash"></i></a>
+                        <a href="/delete_todo/{{ todo.srno}}"><i class="fa-solid fa-trash"></i></a>
                     </div>
                 </div>
                 {% endfor %}
